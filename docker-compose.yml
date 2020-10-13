@@ -14,7 +14,7 @@ services:
       - "--entryPoints.web.address=:80"
     restart: always
     ports:
-      - "0.0.0.0:80:80"
+      - "0.0.0.0:8000:80"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
@@ -27,7 +27,7 @@ services:
       - ./serve:/usr/share/nginx/html/
       - ./bookworm/Bookworm-Vega/build:/usr/share/nginx/html/vega/
     labels:
-      - traefik.http.routers.nginx.rule=HostRegexp(`bkt.pennds.org`)
+      - traefik.http.routers.nginx.rule=HostRegexp(`localhost`)
 
   mariadb:
     image: mariadb:latest
@@ -51,6 +51,6 @@ services:
     # command: bookworm serve 
     command: gunicorn --bind 0.0.0.0:10012 bookworm:app
     labels:
-      - traefik.http.routers.bookworm.rule=HostRegexp(`bkt.pennds.org`) && PathPrefix(`/cgi-bin`)
+      - traefik.http.routers.bookworm.rule=HostRegexp(`localhost`) && PathPrefix(`/cgi-bin`)
       - traefik.http.services.bookworm.loadbalancer.server.port=10012
 
